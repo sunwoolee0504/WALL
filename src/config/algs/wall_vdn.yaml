@@ -1,0 +1,43 @@
+# --- VDN specific parameters ---
+
+# use epsilon greedy action selector
+action_selector: "epsilon_greedy"
+epsilon_start: 1.0
+epsilon_finish: 0.05
+epsilon_anneal_time: 50000
+
+runner: "episode"
+
+buffer_size: 5000
+
+# update the target network every {} episodes
+target_update_interval: 200
+
+# use the Q_Learner to train
+agent_output_type: "q"
+learner: "q_learner"
+double_q: True
+mixer: "vdn"
+
+name: "vdn"
+
+# --- Wolfpack attack ---
+pretrain: True
+followup_l2: False
+init_agent_random: True
+init_attack_step_method: "planner"
+
+attack_duration: 3
+temperature: 0.5
+attack_period: 20
+
+num_attack_train: 16
+num_attack_test: 12
+num_followup_agents: 2
+
+# --- Transformer ---
+num_trans_head: 1
+num_trans_layer: 1
+trans_embed_dim: 64
+trans_input_len: 20
+env_max_timestep: 300
