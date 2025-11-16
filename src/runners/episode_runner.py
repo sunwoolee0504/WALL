@@ -126,7 +126,8 @@ class EpisodeRunner:
             self._log(cur_returns, cur_stats, log_prefix)
             if hasattr(self.mac.action_selector, "epsilon"):
                 self.logger.log_stat("epsilon", self.mac.action_selector.epsilon, self.t_env)
-                wandb.log({"epsilon": self.mac.action_selector.epsilon}, step=self.t_env)
+                if self.args.use_wandb:
+                    wandb.log({"epsilon": self.mac.action_selector.epsilon}, step=self.t_env)
             self.log_train_stats_t = self.t_env
 
         return self.batch
@@ -407,23 +408,26 @@ class EpisodeRunner:
         battle_won = env_info.get("battle_won", 0)
 
         self._log(cur_returns, cur_stats, log_prefix)
-        
-        if test_mode:
-            wandb.log({"test wolfpack attack num": do_attack_num}, step=self.t_env)
-        else:
-            wandb.log({"wolfpack attack num": do_attack_num}, step=self.t_env)
+
+        if self.args.use_wandb:
+            if test_mode:
+                wandb.log({"test wolfpack attack num": do_attack_num}, step=self.t_env)
+            else:
+                wandb.log({"wolfpack attack num": do_attack_num}, step=self.t_env)
 
         return self.batch
 
     def _log(self, returns, stats, prefix):
         self.logger.log_stat(prefix + "return_mean", np.mean(returns), self.t_env)
         self.logger.log_stat(prefix + "return_std", np.std(returns), self.t_env)
-        wandb.log({prefix + "return_mean": np.mean(returns)}, step=self.t_env)
-        wandb.log({prefix + "return_std": np.std(returns)}, step=self.t_env)
+        if self.args.use_wandb:
+            wandb.log({prefix + "return_mean": np.mean(returns)}, step=self.t_env)
+            wandb.log({prefix + "return_std": np.std(returns)}, step=self.t_env)
         returns.clear()
 
         for k, v in stats.items():
             if k != "n_episodes":
                 self.logger.log_stat(prefix + k + "_mean" , v/stats["n_episodes"], self.t_env)
-                wandb.log({prefix + k + "_mean": v/stats["n_episodes"]}, step=self.t_env)
+                if self.args.use_wandb:
+                    wandb.log({prefix + k + "_mean": v/stats["n_episodes"]}, step=self.t_env)
         stats.clear()
