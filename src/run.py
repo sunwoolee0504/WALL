@@ -52,16 +52,16 @@ def run(_run, _config, _log):
         wandb_logs_direc = os.path.join(dirname(dirname(dirname(abspath(__file__)))), "results", "wandb")
         wandb_exp_direc = os.path.join(wandb_logs_direc, "{}").format(unique_token)
 
-        key="7cf5eacc76673407059e8682e56d1b3278e29ad9"
+        key=""    # key
         wandb.login(key=key)
         run = wandb.init(config=args,
-                        project='MARL_SW',
-                        entity='mlic_academic',
+                        project='',
+                        entity='',
                         notes=socket.gethostname(),
-                        name="test",
-                        group='robust',
+                        name="",
+                        group='',
                         dir=str(wandb_exp_direc),
-                        job_type="training",
+                        job_type="",
                         reinit=True)
 
     # sacred is on by default
