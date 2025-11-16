@@ -15,7 +15,7 @@ bash install_sc2.sh
 
 This will download SC2 into the 3rdparty folder and copy the maps necessary to run over.
 
-The requirements.txt file can be used to install the necessary packages into a virtual environment (not recomended).
+The requirements.txt file can be used to install the necessary packages into a virtual environment.
 
 ## Run an WALL experiment
 
