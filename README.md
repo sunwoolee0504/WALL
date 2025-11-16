@@ -8,13 +8,6 @@ Traditional robust methods in multi-agent reinforcement learning (MARL) often st
 
 ## Installation instructions
 
-
-Build the Dockerfile using 
-```shell
-cd docker
-bash build.sh
-```
-
 Set up StarCraft II and SMAC:
 ```shell
 bash install_sc2.sh
