@@ -4,7 +4,7 @@ This repository considers the implementation of the paper "Wolfpack Adversarial 
 ## Abstract
 Traditional robust methods in multi-agent reinforcement learning (MARL) often struggle against coordinated adversarial attacks in cooperative scenarios. To address this limitation, we propose the Wolfpack Adversarial Attack framework, inspired by wolf hunting strategies, which targets an initial agent and its assisting agents to disrupt cooperation. Additionally, we introduce the Wolfpack-Adversarial Learning for MARL (WALL) framework, which trains robust MARL policies to defend against the proposed Wolfpack attack by fostering system-wide collaboration. Experimental results underscore the devastating impact of the Wolfpack attack and the significant robustness improvements achieved by WALL.
 
-![Uploading thumbnail_ICML.png…]()
+<img width="319" height="205" alt="thumbnail_ICML" src="https://github.com/user-attachments/assets/9e5649bb-ce83-4ef8-949f-fb15a22eb957" />
 
 ## Installation instructions
 
