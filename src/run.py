@@ -96,6 +96,16 @@ def evaluate_sequential(args, runner):
 
     runner.close_env()
 
+def evaluate_sequential_wolfpack(args, runner):
+
+    for _ in range(args.test_nepisode):
+        runner.run_wolfpack_attacker(test_mode=True)
+
+    if args.save_replay:
+        runner.save_replay()
+
+    runner.close_env()
+    
 def run_sequential(args, logger):
 
     # Init runner so we can get env info
@@ -183,11 +193,15 @@ def run_sequential(args, logger):
         model_path = os.path.join(args.checkpoint_path, str(timestep_to_load))
 
         logger.console_logger.info("Loading model from {}".format(model_path))
+        
         learner.load_models(model_path)
+        learner.load_attackers(model_path)
+        
         runner.t_env = timestep_to_load
 
         if args.evaluate or args.save_replay:
             evaluate_sequential(args, runner)
+            evaluate_sequential_wolfpack(args, runner)
             return
 
     # start training
