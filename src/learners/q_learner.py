@@ -423,3 +423,10 @@ class QLearner:
         if self.mixer is not None:
             self.mixer.load_state_dict(th.load("{}/mixer.th".format(path), map_location=lambda storage, loc: storage))
         self.optimiser.load_state_dict(th.load("{}/opt.th".format(path), map_location=lambda storage, loc: storage))
+
+    def load_attackers(self, path):
+        self.planning_transformer.load_state_dict(th.load("{}/planning_transformer.th".format(path), map_location=lambda storage, loc: storage))
+        self.optimizer_planning.load_state_dict(th.load("{}/optimizer_planning.th".format(path), map_location=lambda storage, loc: storage))
+
+        self.qdiff_transformer.load_state_dict(th.load("{}/qdiff_transformer.th".format(path), map_location=lambda storage, loc: storage))
+        self.optimizer_qdiff.load_state_dict(th.load("{}/optimizer_qdiff.th".format(path), map_location=lambda storage, loc: storage))
