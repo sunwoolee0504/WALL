@@ -22,15 +22,8 @@ import zipfile
 
 sys.dont_write_bytecode = True
 
-ALLOWED_DIRECTORIES = ("src", "tests", "scripts", "docs", "docker", ".github")
-ALLOWED_ROOT_FILES = frozenset({
-    "README.md", "README_KO.md", "LICENSE", "LICENSE.txt", "NOTICE", "NOTICE.md",
-    "CITATION.cff", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md", "SECURITY.md",
-    "requirements.txt", "requirements-optimized.txt", "requirements-dev.txt",
-    "pyproject.toml", "setup.py", "setup.cfg", "environment.yml", "environment.yaml",
-    "MANIFEST.in", "Makefile", ".gitignore", ".gitattributes", ".dockerignore",
-    "install_sc2.sh", "run.sh", "run_interactive.sh",
-})
+ALLOWED_DIRECTORIES = ("src", "tests", "scripts")
+ALLOWED_ROOT_FILES = frozenset({"README.md", "LICENSE", "requirements.txt"})
 ALLOWED_SUFFIXES = frozenset({
     ".py", ".pyi", ".yaml", ".yml", ".json", ".toml", ".cfg", ".ini",
     ".sh", ".bash", ".txt", ".md", ".rst", ".in", ".cff", ".csv",

@@ -3,9 +3,9 @@
 # Downloads: https://github.com/Blizzard/s2client-proto#downloads
 # Maps: https://github.com/oxwhirl/smac#smac-maps
 set -euo pipefail
-WALL_PROJECT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+WALL_PROJECT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
-  printf 'Usage: bash install_sc2.sh [StarCraftII-directory]\nUses SC2PATH when set, otherwise project/3rdparty/StarCraftII. Existing game/maps are preserved.\nThe Blizzard archive uses its published iagreetotheeula password; see the Blizzard download license.\n'
+  printf 'Usage: bash scripts/install_sc2.sh [StarCraftII-directory]\nUses SC2PATH when set, otherwise project/3rdparty/StarCraftII. Existing game/maps are preserved.\nThe Blizzard archive uses its published iagreetotheeula password; see the Blizzard download license.\n'
   exit 0
 fi
 if (( $# > 1 )); then printf 'Too many arguments; use --help.\n' >&2; exit 2; fi

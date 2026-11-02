@@ -8,27 +8,63 @@ Traditional robust methods in multi-agent reinforcement learning (MARL) often st
 
 ## Installation instructions
 
+Use Linux with Python 3.10 or 3.11 (including `venv`), Git, `curl`, and `unzip`.
+The installer creates a new virtual environment and installs the dependencies in
+`requirements.txt` with the selected PyTorch CPU/CUDA wheel.
+
 ```shell
-bash scripts/install_optimized_env.sh cu121 .venv-wall
+git clone https://github.com/sunwoolee0504/WALL.git
+cd WALL
+
+WALL_PYTHON_BIN=python3.11 bash scripts/install_optimized_env.sh cu121 .venv-wall
 source .venv-wall/bin/activate
-bash install_sc2.sh "$PWD/3rdparty/StarCraftII"
+
+bash scripts/install_sc2.sh "$PWD/3rdparty/StarCraftII"
 export SC2PATH="$PWD/3rdparty/StarCraftII"
+python scripts/check_environment.py
 ```
 
-## Run an WALL experiment
+Use `python3.10` instead of `python3.11` if needed. The example selects the
+CUDA 12.1 wheel; choose `cu118`, `cu124`, or `cpu` to suit your system. If
+StarCraft II 4.10 and the SMAC maps are already installed, set `SC2PATH` to that
+installation instead of running the SC2 installer. Activate the environment and
+set `SC2PATH` again when opening a new shell.
 
-QMIX
+## Run a WALL experiment
+
+Run the following commands from the repository root with the environment active.
+Each example trains on `2s3z` using the corresponding pretrained defender in
+`pretrain_model/<algorithm>/2s3z/`.
+
+**QMIX**
+
 ```shell
-python3 src/main.py --config=wall_qmix --env-config=sc2 with env_args.map_name=2s3z num_attack_test=8 num_attack_train=12 num_followup_agents=2 pretrain=True 
+python src/main.py --config=wall_qmix --env-config=sc2 with \
+  env_args.map_name=2s3z pretrain=True seed=1
 ```
-VDN
+
+**VDN**
+
 ```shell
-python3 src/main.py --config=wall_vdn --env-config=sc2 with env_args.map_name=2s3z num_attack_test=8 num_attack_train=12 num_followup_agents=2 pretrain=True 
+python src/main.py --config=wall_vdn --env-config=sc2 with \
+  env_args.map_name=2s3z pretrain=True seed=1
 ```
-QPLEX
+
+**QPLEX**
+
 ```shell
-python3 src/main.py --config=wall_qplex --env-config=sc2 with env_args.map_name=2s3z num_attack_test=8 num_attack_train=12 num_followup_agents=2 pretrain=True 
+python src/main.py --config=wall_qplex --env-config=sc2 with \
+  env_args.map_name=2s3z pretrain=True seed=1
 ```
+
+Attack settings are loaded from `src/config/map_presets.yaml` for the selected
+map. For `2s3z`, these are `num_attack_train=12`, `num_attack_test=8`, and
+`num_followup_agents=2`; append any of these options to override the defaults.
+
+The default training budget is 10,000 environment steps. Append `t_max=<steps>`
+to set the budget for your experiment, or `use_cuda=False` to run on CPU.
+Use `pretrain=False` to train from scratch. Logs and checkpoints are saved under
+`results/` by default.
 
 ## Publication
 

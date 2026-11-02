@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Shared installation entry point for local virtualenvs and docker/Dockerfile.
+# Create a local virtual environment using requirements.txt.
 # Wheel sources: https://docs.pytorch.org/get-started/previous-versions/
 set -euo pipefail
 WALL_PROJECT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -26,12 +26,12 @@ fi
 if [[ "$WALL_VENV" != /* ]]; then
   WALL_VENV="$PWD/$WALL_VENV"
 fi
-WALL_TORCH_REQUIREMENT="$("$WALL_PYTHON_BIN" -c 'from pathlib import Path; import sys; print(next(line for line in Path(sys.argv[1]).read_text().splitlines() if line.startswith("torch==")))' "$WALL_PROJECT_ROOT/requirements-optimized.txt")"
+WALL_TORCH_REQUIREMENT="$("$WALL_PYTHON_BIN" -c 'from pathlib import Path; import sys; print(next(line for line in Path(sys.argv[1]).read_text().splitlines() if line.startswith("torch==")))' "$WALL_PROJECT_ROOT/requirements.txt")"
 "$WALL_PYTHON_BIN" -m venv "$WALL_VENV"
 "$WALL_VENV/bin/python" -m pip install --upgrade pip
 "$WALL_VENV/bin/python" -m pip install "$WALL_TORCH_REQUIREMENT" --index-url "https://download.pytorch.org/whl/${WALL_WHEEL}"
-"$WALL_VENV/bin/python" -m pip install -r "$WALL_PROJECT_ROOT/requirements-optimized.txt"
+"$WALL_VENV/bin/python" -m pip install -r "$WALL_PROJECT_ROOT/requirements.txt"
 "$WALL_VENV/bin/python" -m pip check
 "$WALL_VENV/bin/python" -m pip freeze > "$WALL_VENV/requirements-resolved.txt"
 "$WALL_VENV/bin/python" "$WALL_PROJECT_ROOT/scripts/check_environment.py"
-printf '\nEnvironment created at %s\nActivate with: source %q/bin/activate\nSet SC2PATH or run bash install_sc2.sh before training.\n' "$WALL_VENV" "$WALL_VENV"
+printf '\nEnvironment created at %s\nActivate with: source %q/bin/activate\nSet SC2PATH or run bash scripts/install_sc2.sh before training.\n' "$WALL_VENV" "$WALL_VENV"

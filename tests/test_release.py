@@ -24,12 +24,14 @@ def write(root, relative, content="sample\n"):
 
 def source_tree(tmp_path):
     root = tmp_path / "source"
-    for name in ("README.md", "LICENSE", "requirements-optimized.txt", ".gitignore", ".gitattributes",
-                 "CITATION.cff", "install_sc2.sh", "run.sh", "run_interactive.sh", "src/main.py", "src/config/default.yaml", "tests/test_sample.py",
-                 "scripts/install.sh", "docs/training.md", "docker/Dockerfile", ".github/workflows/test.yml"):
+    for name in ("README.md", "LICENSE", "requirements.txt", "src/main.py",
+                 "src/config/default.yaml", "tests/test_sample.py",
+                 "scripts/install.sh", "scripts/install_sc2.sh"):
         write(root, name)
     (root / "scripts/install.sh").chmod(0o755)
-    for name in ("WALL_paper.pdf", "OPTIMIZATION_NOTES_KO.md", "WALL_IMPLEMENTATION_REVIEW_KO.md",
+    for name in (".gitignore", ".gitattributes", "CITATION.cff", "install_sc2.sh",
+                 "run.sh", "run_interactive.sh", "docker/Dockerfile",
+                 ".github/workflows/test.yml", "docs/training.md", "WALL_paper.pdf", "OPTIMIZATION_NOTES_KO.md", "WALL_IMPLEMENTATION_REVIEW_KO.md",
                  "pretrain_model/3m/agent.th", "results/run.json", "review_artifacts/local.json",
                  "validation/private.json", ".git/config", ".env", "src/.env.production",
                  "src/credentials.json", "src/secrets.yaml", "src/key.pem", "src/model.th",
@@ -49,10 +51,9 @@ def test_directory_export_is_standalone_allowlisted_and_preserves_source(tmp_pat
     before = snapshot(source)
     destination = tmp_path / "public"
     result = release.prepare_release(source, destination)
-    expected = {"README.md", "LICENSE", "requirements-optimized.txt", ".gitignore", ".gitattributes",
-                "CITATION.cff", "install_sc2.sh", "run.sh", "run_interactive.sh", "src/main.py", "src/config/default.yaml", "tests/test_sample.py",
-                "scripts/install.sh", "docs/training.md", "docker/Dockerfile", ".github/workflows/test.yml",
-                release.MANIFEST_NAME}
+    expected = {"README.md", "LICENSE", "requirements.txt", "src/main.py",
+                "src/config/default.yaml", "tests/test_sample.py",
+                "scripts/install.sh", "scripts/install_sc2.sh", release.MANIFEST_NAME}
     assert set(snapshot(destination)) == expected
     assert snapshot(source) == before
     assert result["pretrained_binary_weights_included"] is False

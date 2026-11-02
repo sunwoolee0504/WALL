@@ -1,4 +1,4 @@
-"""Exercise shell entry points with stand-in executables: no Docker, pip or network."""
+"""Exercise shell entry points with stand-in executables: no pip or network."""
 import json
 import os
 from pathlib import Path
@@ -23,7 +23,7 @@ def setup_workspace(tmp_path):
     fake_bin = tmp_path / "fake bin"
     project.mkdir()
     fake_bin.mkdir()
-    for relative in ("run.sh", "run_interactive.sh", "install_sc2.sh", "docker/build.sh", "scripts/install_optimized_env.sh", "requirements-optimized.txt"):
+    for relative in ("scripts/install_sc2.sh", "scripts/install_optimized_env.sh", "requirements.txt"):
         destination = project / relative
         destination.parent.mkdir(exist_ok=True)
         shutil.copy2(ROOT / relative, destination)
@@ -44,30 +44,10 @@ def calls(capture):
     return [json.loads(line) for line in capture.read_text().splitlines()] if capture.exists() else []
 
 
-def test_docker_wrappers_anchor_project_and_preserve_arguments(setup_workspace, tmp_path):
-    project, fake_bin, capture, env = setup_workspace
-    capture_executable(fake_bin / "docker")
-    subprocess.run(["bash", str(project / "docker/build.sh"), "cu121"], cwd=tmp_path, env=env, check=True)
-    build = calls(capture)[-1]
-    assert build[0] == "build" and build[-1] == str(project)
-    assert build[build.index("--file") + 1] == str(project / "docker/Dockerfile")
-    subprocess.run(["bash", str(project / "run.sh"), "0,2", "python", "script with space.py", "literal=$not_expanded"], cwd=tmp_path, env=env, check=True)
-    launch = calls(capture)[-1]
-    assert launch[0] == "run"
-    assert launch[launch.index("--gpus") + 1] == '"device=0,2"'
-    assert "type=bind,source=" + str(project) + ",target=/workspace/wall" in launch
-    assert launch[-4:] == ["wall-optimized:cu121", "python", "script with space.py", "literal=$not_expanded"]
-    subprocess.run(["bash", str(project / "run_interactive.sh"), "cpu"], cwd=tmp_path, env=env, check=True)
-    interactive = calls(capture)[-1]
-    assert "-i" in interactive and "--gpus" not in interactive
-    assert interactive[-2:] == ["wall-optimized:cpu", "bash"]
-
-
 def test_setup_rejects_invalid_arguments_before_external_commands(setup_workspace, tmp_path):
     project, fake_bin, capture, env = setup_workspace
-    capture_executable(fake_bin / "docker")
-    for script, args in (("run.sh", ["bad-device"]), ("docker/build.sh", ["cuda9"]),
-                         ("scripts/install_optimized_env.sh", ["cuda9"]),
+    capture_executable(fake_bin / "curl")
+    for script, args in (("scripts/install_optimized_env.sh", ["cuda9"]),
                          ("scripts/install_optimized_env.sh", ["cpu", str(tmp_path)])):
         result = subprocess.run(["bash", str(project / script), *args], env=env, capture_output=True, text=True)
         assert result.returncode == 2, result.stderr
@@ -99,7 +79,7 @@ else:
     wheel = recorded[1]
     assert wheel[:4] == ["-m", "pip", "install", "torch==2.5.1"]
     assert wheel[-1] == "https://download.pytorch.org/whl/cu121"
-    assert recorded[2] == ["-m", "pip", "install", "-r", str(project / "requirements-optimized.txt")]
+    assert recorded[2] == ["-m", "pip", "install", "-r", str(project / "requirements.txt")]
     assert recorded[3] == ["-m", "pip", "check"]
     assert (tmp_path / "new environment/requirements-resolved.txt").read_text().strip() == "torch==2.5.1+cu121"
 
@@ -107,7 +87,7 @@ else:
 def test_sc2_installer_keeps_existing_installation_without_network(setup_workspace):
     project, fake_bin, capture, env = setup_workspace
     capture_executable(fake_bin / "curl")
-    subprocess.run(["bash", str(project / "install_sc2.sh")], env=env, check=True, capture_output=True)
+    subprocess.run(["bash", str(project / "scripts/install_sc2.sh")], env=env, check=True, capture_output=True)
     assert calls(capture) == []
 
 
@@ -126,7 +106,7 @@ assert args[-1].startswith("https://")
 shutil.copyfile(source, args[args.index("--output") + 1])
 ''')
     destination = tmp_path / "new game location"
-    subprocess.run(["bash", str(project / "install_sc2.sh"), str(destination)], env=env, check=True, capture_output=True)
+    subprocess.run(["bash", str(project / "scripts/install_sc2.sh"), str(destination)], env=env, check=True, capture_output=True)
     assert (destination / "Versions/Base75689/SC2_x64").is_file()
     assert (destination / "Maps/SMAC_Maps/3m.SC2Map").is_file()
     assert game_zip.exists() and maps_zip.exists()
