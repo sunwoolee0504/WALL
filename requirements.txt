@@ -5,7 +5,6 @@ torch==2.5.1
 numpy==1.26.4
 PyYAML==6.0.2
 sacred==0.8.7
-pytest==8.3.5
 # Older SC2 protocol generated code needs protobuf's compatible Python API.
 protobuf==3.20.3
 # This is StarCraft Multi-Agent Challenge, not the unrelated PyPI package 'smac'.

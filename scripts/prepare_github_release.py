@@ -22,7 +22,7 @@ import zipfile
 
 sys.dont_write_bytecode = True
 
-ALLOWED_DIRECTORIES = ("src", "tests", "scripts")
+ALLOWED_DIRECTORIES = ("src", "scripts")
 ALLOWED_ROOT_FILES = frozenset({"README.md", "LICENSE", "requirements.txt"})
 ALLOWED_SUFFIXES = frozenset({
     ".py", ".pyi", ".yaml", ".yml", ".json", ".toml", ".cfg", ".ini",
