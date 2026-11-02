@@ -1,0 +1,41 @@
+# Python and local environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.venv*/
+venv/
+*.egg-info/
+build/
+dist/
+
+# Experiments, credentials and simulator installations
+results/
+wandb/
+tb_logs/
+*.log
+*.tmp
+.env
+.env.*
+!.env.example
+.vscode/
+.idea/
+.DS_Store
+3rdparty/
+StarCraftII/
+
+# Distribute checkpoints separately, not through source control
+pretrain_model/
+*.th
+*.pt
+*.pth
+*.ckpt
+
+# Local review history and archived, unsupported code
+legacy/
+review_artifacts/
+validation/
+WALL_IMPLEMENTATION_REVIEW_KO.md
+OPTIMIZATION_NOTES_KO.md
+WALL_paper.pdf

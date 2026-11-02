@@ -1,0 +1,684 @@
+{
+  "format_version": 1,
+  "release": "2026-10-30",
+  "map_order": [
+    "3m",
+    "8m",
+    "2s3z",
+    "1c3s5z",
+    "MMM",
+    "3s_vs_3z"
+  ],
+  "maps": {
+    "3m": {
+      "selected_defender_seed": 2,
+      "selected_attacker_seed": 1,
+      "defender_cohort": "matched",
+      "attacker_bank": "v1",
+      "defenders": {
+        "1": {
+          "checkpoint": "checkpoints/3m/matched/seed1/learner.th",
+          "config": "src/config/release_eval/3m_seed1.json",
+          "training_steps": 3000008
+        },
+        "2": {
+          "checkpoint": "checkpoints/3m/matched/seed2/learner.th",
+          "config": "src/config/release_eval/3m_seed2.json",
+          "training_steps": 3000029
+        },
+        "3": {
+          "checkpoint": "checkpoints/3m/matched/seed3/learner.th",
+          "config": "src/config/release_eval/3m_seed3.json",
+          "training_steps": 3000015
+        },
+        "4": {
+          "checkpoint": "checkpoints/3m/matched/seed4/learner.th",
+          "config": "src/config/release_eval/3m_seed4.json",
+          "training_steps": 3000011
+        },
+        "5": {
+          "checkpoint": "checkpoints/3m/matched/seed5/learner.th",
+          "config": "src/config/release_eval/3m_seed5.json",
+          "training_steps": 3000003
+        }
+      },
+      "attackers": {
+        "1": {
+          "checkpoint": "checkpoints/3m/v1/seed1/learner.th"
+        },
+        "2": {
+          "checkpoint": "checkpoints/3m/v1/seed2/learner.th"
+        },
+        "3": {
+          "checkpoint": "checkpoints/3m/v1/seed3/learner.th"
+        },
+        "4": {
+          "checkpoint": "checkpoints/3m/v1/seed4/learner.th"
+        },
+        "5": {
+          "checkpoint": "checkpoints/3m/v1/seed5/learner.th"
+        }
+      },
+      "pretrained_directory": "pretrain_model/qmix/3m",
+      "evaluation": {
+        "num_attack_test": 4,
+        "num_followup_agents": 1,
+        "temperature": 0.5
+      },
+      "training_config": "src/config/release_training/3m.json",
+      "training": {
+        "num_attack_train": 4,
+        "num_followup_agents": null,
+        "temperature": 0.5,
+        "lr": 0.0005,
+        "epsilon_start": 1.0,
+        "planner_lr": 0.0005,
+        "qdiff_lr": 0.0005,
+        "t_max": 3000000
+      },
+      "in_training_evaluation": {
+        "num_attack_test": 4,
+        "num_followup_agents": null,
+        "temperature": 0.5
+      }
+    },
+    "8m": {
+      "selected_defender_seed": 1,
+      "selected_attacker_seed": 5,
+      "defender_cohort": "matched",
+      "attacker_bank": "v1",
+      "defenders": {
+        "1": {
+          "checkpoint": "checkpoints/8m/matched/seed1/learner.th",
+          "config": "src/config/release_eval/8m_seed1.json",
+          "training_steps": 3000026
+        },
+        "2": {
+          "checkpoint": "checkpoints/8m/matched/seed2/learner.th",
+          "config": "src/config/release_eval/8m_seed2.json",
+          "training_steps": 3000008
+        },
+        "3": {
+          "checkpoint": "checkpoints/8m/matched/seed3/learner.th",
+          "config": "src/config/release_eval/8m_seed3.json",
+          "training_steps": 3000027
+        },
+        "4": {
+          "checkpoint": "checkpoints/8m/matched/seed4/learner.th",
+          "config": "src/config/release_eval/8m_seed4.json",
+          "training_steps": 3000029
+        },
+        "5": {
+          "checkpoint": "checkpoints/8m/matched/seed5/learner.th",
+          "config": "src/config/release_eval/8m_seed5.json",
+          "training_steps": 3000010
+        }
+      },
+      "attackers": {
+        "1": {
+          "checkpoint": "checkpoints/8m/v1/seed1/learner.th"
+        },
+        "2": {
+          "checkpoint": "checkpoints/8m/v1/seed2/learner.th"
+        },
+        "3": {
+          "checkpoint": "checkpoints/8m/v1/seed3/learner.th"
+        },
+        "4": {
+          "checkpoint": "checkpoints/8m/v1/seed4/learner.th"
+        },
+        "5": {
+          "checkpoint": "checkpoints/8m/v1/seed5/learner.th"
+        }
+      },
+      "pretrained_directory": "pretrain_model/qmix/8m",
+      "evaluation": {
+        "num_attack_test": 4,
+        "num_followup_agents": 3,
+        "temperature": 0.5
+      },
+      "training_config": "src/config/release_training/8m.json",
+      "training": {
+        "num_attack_train": 4,
+        "num_followup_agents": null,
+        "temperature": 0.5,
+        "lr": 0.0005,
+        "epsilon_start": 1.0,
+        "planner_lr": 0.0005,
+        "qdiff_lr": 0.0005,
+        "t_max": 3000000
+      },
+      "in_training_evaluation": {
+        "num_attack_test": 4,
+        "num_followup_agents": null,
+        "temperature": 0.5
+      }
+    },
+    "2s3z": {
+      "selected_defender_seed": 1,
+      "selected_attacker_seed": 5,
+      "defender_cohort": "v1",
+      "attacker_bank": "v1",
+      "defenders": {
+        "1": {
+          "checkpoint": "checkpoints/2s3z/v1/seed1/learner.th",
+          "config": "src/config/release_eval/2s3z_seed1.json",
+          "training_steps": 3000021
+        },
+        "2": {
+          "checkpoint": "checkpoints/2s3z/v1/seed2/learner.th",
+          "config": "src/config/release_eval/2s3z_seed2.json",
+          "training_steps": 3000038
+        },
+        "3": {
+          "checkpoint": "checkpoints/2s3z/v1/seed3/learner.th",
+          "config": "src/config/release_eval/2s3z_seed3.json",
+          "training_steps": 3000011
+        },
+        "4": {
+          "checkpoint": "checkpoints/2s3z/v1/seed4/learner.th",
+          "config": "src/config/release_eval/2s3z_seed4.json",
+          "training_steps": 3000052
+        },
+        "5": {
+          "checkpoint": "checkpoints/2s3z/v1/seed5/learner.th",
+          "config": "src/config/release_eval/2s3z_seed5.json",
+          "training_steps": 3000035
+        }
+      },
+      "attackers": {
+        "1": {
+          "checkpoint": "checkpoints/2s3z/v1/seed1/learner.th"
+        },
+        "2": {
+          "checkpoint": "checkpoints/2s3z/v1/seed2/learner.th"
+        },
+        "3": {
+          "checkpoint": "checkpoints/2s3z/v1/seed3/learner.th"
+        },
+        "4": {
+          "checkpoint": "checkpoints/2s3z/v1/seed4/learner.th"
+        },
+        "5": {
+          "checkpoint": "checkpoints/2s3z/v1/seed5/learner.th"
+        }
+      },
+      "pretrained_directory": "pretrain_model/qmix/2s3z",
+      "evaluation": {
+        "num_attack_test": 12,
+        "num_followup_agents": 2,
+        "temperature": 0.5
+      },
+      "training_config": "src/config/release_training/2s3z.json",
+      "training": {
+        "num_attack_train": null,
+        "num_followup_agents": null,
+        "temperature": 0.5,
+        "lr": 0.0005,
+        "epsilon_start": 1.0,
+        "planner_lr": 0.0005,
+        "qdiff_lr": 0.0005,
+        "t_max": 3000000
+      },
+      "in_training_evaluation": {
+        "num_attack_test": null,
+        "num_followup_agents": null,
+        "temperature": 0.5
+      }
+    },
+    "1c3s5z": {
+      "selected_defender_seed": 3,
+      "selected_attacker_seed": 3,
+      "defender_cohort": "v1",
+      "attacker_bank": "v1",
+      "defenders": {
+        "1": {
+          "checkpoint": "checkpoints/1c3s5z/v1/seed1/learner.th",
+          "config": "src/config/release_eval/1c3s5z_seed1.json",
+          "training_steps": 3000020
+        },
+        "2": {
+          "checkpoint": "checkpoints/1c3s5z/v1/seed2/learner.th",
+          "config": "src/config/release_eval/1c3s5z_seed2.json",
+          "training_steps": 3000019
+        },
+        "3": {
+          "checkpoint": "checkpoints/1c3s5z/v1/seed3/learner.th",
+          "config": "src/config/release_eval/1c3s5z_seed3.json",
+          "training_steps": 3000001
+        },
+        "4": {
+          "checkpoint": "checkpoints/1c3s5z/v1/seed4/learner.th",
+          "config": "src/config/release_eval/1c3s5z_seed4.json",
+          "training_steps": 3000044
+        },
+        "5": {
+          "checkpoint": "checkpoints/1c3s5z/v1/seed5/learner.th",
+          "config": "src/config/release_eval/1c3s5z_seed5.json",
+          "training_steps": 3000002
+        }
+      },
+      "attackers": {
+        "1": {
+          "checkpoint": "checkpoints/1c3s5z/v1/seed1/learner.th"
+        },
+        "2": {
+          "checkpoint": "checkpoints/1c3s5z/v1/seed2/learner.th"
+        },
+        "3": {
+          "checkpoint": "checkpoints/1c3s5z/v1/seed3/learner.th"
+        },
+        "4": {
+          "checkpoint": "checkpoints/1c3s5z/v1/seed4/learner.th"
+        },
+        "5": {
+          "checkpoint": "checkpoints/1c3s5z/v1/seed5/learner.th"
+        }
+      },
+      "pretrained_directory": "pretrain_model/qmix/1c3s5z",
+      "evaluation": {
+        "num_attack_test": 8,
+        "num_followup_agents": 3,
+        "temperature": 0.5
+      },
+      "training_config": "src/config/release_training/1c3s5z.json",
+      "training": {
+        "num_attack_train": null,
+        "num_followup_agents": null,
+        "temperature": 0.5,
+        "lr": 0.0005,
+        "epsilon_start": 1.0,
+        "planner_lr": 0.0005,
+        "qdiff_lr": 0.0005,
+        "t_max": 3000000
+      },
+      "in_training_evaluation": {
+        "num_attack_test": null,
+        "num_followup_agents": null,
+        "temperature": 0.5
+      }
+    },
+    "MMM": {
+      "selected_defender_seed": 4,
+      "selected_attacker_seed": 3,
+      "defender_cohort": "new",
+      "attacker_bank": "new",
+      "defenders": {
+        "1": {
+          "checkpoint": "checkpoints/MMM/new/seed1/learner.th",
+          "config": "src/config/release_eval/MMM_seed1.json",
+          "training_steps": 3000029
+        },
+        "2": {
+          "checkpoint": "checkpoints/MMM/new/seed2/learner.th",
+          "config": "src/config/release_eval/MMM_seed2.json",
+          "training_steps": 3000009
+        },
+        "3": {
+          "checkpoint": "checkpoints/MMM/new/seed3/learner.th",
+          "config": "src/config/release_eval/MMM_seed3.json",
+          "training_steps": 3000033
+        },
+        "4": {
+          "checkpoint": "checkpoints/MMM/new/seed4/learner.th",
+          "config": "src/config/release_eval/MMM_seed4.json",
+          "training_steps": 3000046
+        },
+        "5": {
+          "checkpoint": "checkpoints/MMM/new/seed5/learner.th",
+          "config": "src/config/release_eval/MMM_seed5.json",
+          "training_steps": 3000014
+        }
+      },
+      "attackers": {
+        "1": {
+          "checkpoint": "checkpoints/MMM/new/seed1/learner.th"
+        },
+        "2": {
+          "checkpoint": "checkpoints/MMM/new/seed2/learner.th"
+        },
+        "3": {
+          "checkpoint": "checkpoints/MMM/new/seed3/learner.th"
+        },
+        "4": {
+          "checkpoint": "checkpoints/MMM/new/seed4/learner.th"
+        },
+        "5": {
+          "checkpoint": "checkpoints/MMM/new/seed5/learner.th"
+        }
+      },
+      "pretrained_directory": "pretrain_model/qmix/MMM",
+      "evaluation": {
+        "num_attack_test": 4,
+        "num_followup_agents": 5,
+        "temperature": 0.2
+      },
+      "training_config": "src/config/release_training/MMM.json",
+      "training": {
+        "num_attack_train": 16,
+        "num_followup_agents": 4,
+        "temperature": 0.5,
+        "lr": 0.00025,
+        "epsilon_start": 0.2,
+        "planner_lr": 0.0005,
+        "qdiff_lr": 0.0005,
+        "t_max": 3000000
+      },
+      "in_training_evaluation": {
+        "num_attack_test": 8,
+        "num_followup_agents": 4,
+        "temperature": 0.5
+      }
+    },
+    "3s_vs_3z": {
+      "selected_defender_seed": 3,
+      "selected_attacker_seed": 3,
+      "defender_cohort": "v1",
+      "attacker_bank": "v1",
+      "defenders": {
+        "1": {
+          "checkpoint": "checkpoints/3s_vs_3z/v1/seed1/learner.th",
+          "config": "src/config/release_eval/3s_vs_3z_seed1.json",
+          "training_steps": 3000064
+        },
+        "2": {
+          "checkpoint": "checkpoints/3s_vs_3z/v1/seed2/learner.th",
+          "config": "src/config/release_eval/3s_vs_3z_seed2.json",
+          "training_steps": 3000038
+        },
+        "3": {
+          "checkpoint": "checkpoints/3s_vs_3z/v1/seed3/learner.th",
+          "config": "src/config/release_eval/3s_vs_3z_seed3.json",
+          "training_steps": 3000066
+        },
+        "4": {
+          "checkpoint": "checkpoints/3s_vs_3z/v1/seed4/learner.th",
+          "config": "src/config/release_eval/3s_vs_3z_seed4.json",
+          "training_steps": 3000046
+        },
+        "5": {
+          "checkpoint": "checkpoints/3s_vs_3z/v1/seed5/learner.th",
+          "config": "src/config/release_eval/3s_vs_3z_seed5.json",
+          "training_steps": 3000048
+        }
+      },
+      "attackers": {
+        "1": {
+          "checkpoint": "checkpoints/3s_vs_3z/v1/seed1/learner.th"
+        },
+        "2": {
+          "checkpoint": "checkpoints/3s_vs_3z/v1/seed2/learner.th"
+        },
+        "3": {
+          "checkpoint": "checkpoints/3s_vs_3z/v1/seed3/learner.th"
+        },
+        "4": {
+          "checkpoint": "checkpoints/3s_vs_3z/v1/seed4/learner.th"
+        },
+        "5": {
+          "checkpoint": "checkpoints/3s_vs_3z/v1/seed5/learner.th"
+        }
+      },
+      "pretrained_directory": "pretrain_model/qmix/3s_vs_3z",
+      "evaluation": {
+        "num_attack_test": 8,
+        "num_followup_agents": 1,
+        "temperature": 0.5
+      },
+      "training_config": "src/config/release_training/3s_vs_3z.json",
+      "training": {
+        "num_attack_train": null,
+        "num_followup_agents": null,
+        "temperature": 0.5,
+        "lr": 0.0005,
+        "epsilon_start": 1.0,
+        "planner_lr": 0.0005,
+        "qdiff_lr": 0.0005,
+        "t_max": 3000000
+      },
+      "in_training_evaluation": {
+        "num_attack_test": null,
+        "num_followup_agents": null,
+        "temperature": 0.5
+      }
+    }
+  },
+  "assets": {
+    "checkpoints/3m/matched/seed1/learner.th": {
+      "bytes": 2164941,
+      "sha256": "2269cc7fbeef250b16d52d6553391d4dc4cc9feaa257dd1e02acb64592e6e474"
+    },
+    "checkpoints/3m/v1/seed1/learner.th": {
+      "bytes": 2164877,
+      "sha256": "f70189fb5b3068dcf9e390f06469281e6b9c91af7a0c40d40e13dd7b42f4e57d"
+    },
+    "checkpoints/3m/matched/seed2/learner.th": {
+      "bytes": 2164941,
+      "sha256": "c82299f23198d0b021fc411ed854a52deb9df0d33b7764e7cd7dc6bb1dff0ba0"
+    },
+    "checkpoints/3m/v1/seed2/learner.th": {
+      "bytes": 2164941,
+      "sha256": "04b6008d1bd4c228966b3e0388fce208d72743d74af99f47a7e339f0c8511023"
+    },
+    "checkpoints/3m/matched/seed3/learner.th": {
+      "bytes": 2164877,
+      "sha256": "efdbbdb16530e63815dfe04236fc65989cd2651ef1e5edce49d5178c91345a16"
+    },
+    "checkpoints/3m/v1/seed3/learner.th": {
+      "bytes": 2164877,
+      "sha256": "6c7f3b091c6add711759e37a80b64b390d8d9e71f7d5c74ff7e347bf3db906e3"
+    },
+    "checkpoints/3m/matched/seed4/learner.th": {
+      "bytes": 2164941,
+      "sha256": "fb43c8415f1dade03749c16c517938056a715332fbf2fe71020a8d10efde7a3d"
+    },
+    "checkpoints/3m/v1/seed4/learner.th": {
+      "bytes": 2164877,
+      "sha256": "e8badd09386aa5dd508b8d6ca39cc253495eb8d173f2778d1752c6bc520f5fce"
+    },
+    "checkpoints/3m/matched/seed5/learner.th": {
+      "bytes": 2164877,
+      "sha256": "4cfd3da4af6774b18a9568534f847673d29073c158cb4275e7b12a0b5e90cc9c"
+    },
+    "checkpoints/3m/v1/seed5/learner.th": {
+      "bytes": 2164941,
+      "sha256": "a2b1700eef36e8713c2da284e42301acb5c3db4cad458163514605fdaa66b176"
+    },
+    "pretrain_model/qmix/3m/agent.th": {
+      "bytes": 116041,
+      "sha256": "a7e0377e67269850d0a67e576a1d50431980f1db7bc43954f0dc461692974216"
+    },
+    "pretrain_model/qmix/3m/mixer.th": {
+      "bytes": 75929,
+      "sha256": "e0f8bae23cdc93678ffabc4a41c0018487b2d3cdd62dabbe1487a1c30511e3cc"
+    },
+    "pretrain_model/qmix/3m/opt.th": {
+      "bytes": 191095,
+      "sha256": "fcc384f63a9a110a27dfe6cd844e24270aa9133066bdf0ee39f38d274d2709e8"
+    },
+    "checkpoints/8m/matched/seed1/learner.th": {
+      "bytes": 3877133,
+      "sha256": "49b8c1fdd3f6f47317bc24dd76bc032c73d3910ec078cc0699a5c7ae8ee31886"
+    },
+    "checkpoints/8m/v1/seed1/learner.th": {
+      "bytes": 3877197,
+      "sha256": "051df464c043ae9d22cfceaf2088ff2fd29a861b78b6cd4dbba0b71b599faa13"
+    },
+    "checkpoints/8m/matched/seed2/learner.th": {
+      "bytes": 3877261,
+      "sha256": "332183989dbbf1dda262f293d4707a63c1d1f93576c593f26f3acd5ecadcdbaf"
+    },
+    "checkpoints/8m/v1/seed2/learner.th": {
+      "bytes": 3877197,
+      "sha256": "6ff22be19d9f807c36be7816a6a2224a644ae0ec12ac5fe719c8ccc00b705ed6"
+    },
+    "checkpoints/8m/matched/seed3/learner.th": {
+      "bytes": 3877197,
+      "sha256": "9dd95c3a5c2fea238ba36f7a614bf5f3c3024ae9ba9aff8a3fb34befe77c76ea"
+    },
+    "checkpoints/8m/v1/seed3/learner.th": {
+      "bytes": 3877197,
+      "sha256": "800e9b90740556f0e8d784305efc3076e73c9c504a8ccb28d9f43b3fd527b87e"
+    },
+    "checkpoints/8m/matched/seed4/learner.th": {
+      "bytes": 3877261,
+      "sha256": "58194f1f7fb7aa63c1360af29cb2c006fec59d956c159f34242950ad924209fc"
+    },
+    "checkpoints/8m/v1/seed4/learner.th": {
+      "bytes": 3877197,
+      "sha256": "6c16f568d5daccf665eb2f56baf7d2b29110f86d330262e565004e7d446a0411"
+    },
+    "checkpoints/8m/matched/seed5/learner.th": {
+      "bytes": 3877197,
+      "sha256": "3408b1395ca7a7726b08543f0f5e028cb356449b73292224d96f0372e05ecafb"
+    },
+    "checkpoints/8m/v1/seed5/learner.th": {
+      "bytes": 3877133,
+      "sha256": "d34fa454b6664a7e074e73ed379ed805b4344b460af50c172d13d3e14f3b3e2f"
+    },
+    "pretrain_model/qmix/8m/agent.th": {
+      "bytes": 132681,
+      "sha256": "7f250e50eb87d492ed9ef2c271fc00453ec0296dd161b2309d729ee10d80844c"
+    },
+    "pretrain_model/qmix/8m/mixer.th": {
+      "bytes": 209693,
+      "sha256": "0fca40d814a5e80d4cfb4dd0d594f686d24124be87ee06f698f2b6d48df264cd"
+    },
+    "pretrain_model/qmix/8m/opt.th": {
+      "bytes": 341491,
+      "sha256": "63e613e4f55f992153f7878a043bde706f0310971895b8ae1ea04c93ddb4e172"
+    },
+    "checkpoints/2s3z/v1/seed1/learner.th": {
+      "bytes": 3113805,
+      "sha256": "f587e4eff0621d86292719961e944261b030d178a16654c82802ad86d5018b38"
+    },
+    "checkpoints/2s3z/v1/seed2/learner.th": {
+      "bytes": 3113741,
+      "sha256": "071c6a688bcc03a6ba2c67e9b040fbea7e657b2b1a43c6d84380a9f742d6edeb"
+    },
+    "checkpoints/2s3z/v1/seed3/learner.th": {
+      "bytes": 3113805,
+      "sha256": "6531214af70672b56f9d04c94d1719b78c2520a9a882a05735abd1ce968a01fe"
+    },
+    "checkpoints/2s3z/v1/seed4/learner.th": {
+      "bytes": 3113741,
+      "sha256": "0d147220158a8a43a409fa8e174efe0592a3ab29306c0b659b71140706ba6695"
+    },
+    "checkpoints/2s3z/v1/seed5/learner.th": {
+      "bytes": 3113805,
+      "sha256": "6a2785be41d83cc385283f193cdc69029b8bb85ccc2065f89c9a37b74c242f3b"
+    },
+    "pretrain_model/qmix/2s3z/agent.th": {
+      "bytes": 130377,
+      "sha256": "e98624d5f46bd1b36d345a22b9b15f777d83136af88d6f889b5f046310146311"
+    },
+    "pretrain_model/qmix/2s3z/mixer.th": {
+      "bytes": 147865,
+      "sha256": "9afdb946419a25653099f25549c6eaf0c26e83e8902f65e28734ff63422a41e8"
+    },
+    "pretrain_model/qmix/2s3z/opt.th": {
+      "bytes": 277363,
+      "sha256": "30c5a86290182b7bc1a47ddb3380643db5b91ceb76a857b5c6165a15b3c2dc20"
+    },
+    "checkpoints/1c3s5z/v1/seed1/learner.th": {
+      "bytes": 5740429,
+      "sha256": "550c044924fde87779bc11bbf2c7673c4994e2dcf26e720f6e769da25b6f4dcf"
+    },
+    "checkpoints/1c3s5z/v1/seed2/learner.th": {
+      "bytes": 5740365,
+      "sha256": "33dd182563d29c629a6f79b00c32fd1220925c724223bbf923b36934c5222dec"
+    },
+    "checkpoints/1c3s5z/v1/seed3/learner.th": {
+      "bytes": 5740429,
+      "sha256": "b24c745c5aa90e1b1f8a885d160dda8bcc4dc29d25fc47b80bcab62973921c9c"
+    },
+    "checkpoints/1c3s5z/v1/seed4/learner.th": {
+      "bytes": 5740429,
+      "sha256": "d85620aab4e05d62d915157370c378654aea1ecb7364ea797d14d1a7f6d7562d"
+    },
+    "checkpoints/1c3s5z/v1/seed5/learner.th": {
+      "bytes": 5740429,
+      "sha256": "fe20f5dc2e0564dc57241aef01db81f327f47b3dc8f3d3b1269615719aec25f5"
+    },
+    "pretrain_model/qmix/1c3s5z/agent.th": {
+      "bytes": 154503,
+      "sha256": "d42fcfd73b72182a38ec2c497117b41f2de923ac524cd0881c3469f005bbe322"
+    },
+    "pretrain_model/qmix/1c3s5z/mixer.th": {
+      "bytes": 296347,
+      "sha256": "d4c65e945862f5c71b926879a3f0dcfc143feb0e301d600694c2c4f016b9a342"
+    },
+    "pretrain_model/qmix/1c3s5z/opt.th": {
+      "bytes": 449969,
+      "sha256": "1f9db570a69be2974642ae3217d46600e86a3d97d9a9ccd645bc59d03d4ac32d"
+    },
+    "checkpoints/MMM/new/seed1/learner.th": {
+      "bytes": 6117517,
+      "sha256": "9ae9609d8f028b1bd8f4c0017b2be16dd1ce3c82fddb52d62e81a5b964f262d9"
+    },
+    "checkpoints/MMM/new/seed2/learner.th": {
+      "bytes": 6117453,
+      "sha256": "81e6c16ac089876544d6c62b6ef39714381cf57ccc69723e04970aad1e326240"
+    },
+    "checkpoints/MMM/new/seed3/learner.th": {
+      "bytes": 6117517,
+      "sha256": "007f3e609b9ed0ee39d433caba405b57b100cd27e2c110c0a1bcbaff5afec857"
+    },
+    "checkpoints/MMM/new/seed4/learner.th": {
+      "bytes": 6117453,
+      "sha256": "b24ffe5abc32c54c60c909ca6269efe5434ebe2a8aaa7075ac6da5c592f38a1e"
+    },
+    "checkpoints/MMM/new/seed5/learner.th": {
+      "bytes": 6117517,
+      "sha256": "fa79503afa69cb9f527e6923cc9c7fdb33f8d7210627ffa4392a88442167523c"
+    },
+    "pretrain_model/qmix/MMM/agent.th": {
+      "bytes": 154761,
+      "sha256": "cab9d09f07594c4b9c11a2c1a9b4ec2609b928ee05e5ece2df071e783dffb98f"
+    },
+    "pretrain_model/qmix/MMM/mixer.th": {
+      "bytes": 320026,
+      "sha256": "107420691da7a2ff3868b44a98198a852946f284894aac62f7694d6d0c5795cc"
+    },
+    "pretrain_model/qmix/MMM/opt.th": {
+      "bytes": 473907,
+      "sha256": "140265c65caf55abd9a09962a00d03a6b09d0d9ddfd2b8a4ad33ef0246336d50"
+    },
+    "checkpoints/3s_vs_3z/v1/seed1/learner.th": {
+      "bytes": 2224973,
+      "sha256": "80cb7be9a3c452140aad2974064eda0f09514886ff05cd5c75540c641758693f"
+    },
+    "checkpoints/3s_vs_3z/v1/seed2/learner.th": {
+      "bytes": 2224973,
+      "sha256": "901dd6abba3735de1320b97117372194f77cd7c51f74bb6d90727ceb4bc2b251"
+    },
+    "checkpoints/3s_vs_3z/v1/seed3/learner.th": {
+      "bytes": 2224973,
+      "sha256": "0034b668dea9fa9cb792cc2628a036060fe74be8ef2a46e53f96819b75bbcd80"
+    },
+    "checkpoints/3s_vs_3z/v1/seed4/learner.th": {
+      "bytes": 2224973,
+      "sha256": "5706ffeae93648cf3dc67b4f3916cee5e892c542a908c0b3e242e08c83afd067"
+    },
+    "checkpoints/3s_vs_3z/v1/seed5/learner.th": {
+      "bytes": 2224909,
+      "sha256": "9a5c5ec347cc851d3ce4f710aae723dd760f94fc7ba0f69bf98122968fee5d61"
+    },
+    "pretrain_model/qmix/3s_vs_3z/agent.th": {
+      "bytes": 117575,
+      "sha256": "2b9f9cd5d2f85acd3cbb9c11d297ad07faa57541fed2423fb1df01c658b07bca"
+    },
+    "pretrain_model/qmix/3s_vs_3z/mixer.th": {
+      "bytes": 80539,
+      "sha256": "36770fa44ec3fe56aa3198097e413b21a693933641802d35880bb0904a8fec80"
+    },
+    "pretrain_model/qmix/3s_vs_3z/opt.th": {
+      "bytes": 197245,
+      "sha256": "fa75719e8d31573e208fce5b999455fc96589eb5e952d901b18ce34d0673829e"
+    }
+  },
+  "selection_protocol_sha256": "7f037d6f91c61312a5b2606bf42ca6fcb131c9712e8e8a6e6fd65fc459a60f36",
+  "selection_sha256": "cc12e96e2ae1f279b6d3c80f55faf6f0060c6ece6754e1b1660ad98aaa6412e6",
+  "pretrained_note": "One initial QMIX policy per map reused across fine-tuning seeds; no equal-extra-training baseline.",
+  "provenance_note": "Selected checkpoints were chosen on development episodes. Five-seed statistics and held-out episode validation are reported separately."
+}

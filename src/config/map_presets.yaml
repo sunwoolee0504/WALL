@@ -1,0 +1,27 @@
+# WALL map defaults. Explicit Sacred CLI values take precedence.
+# 3m: training K=8; author-corrected evaluation K=4 (Table C.3 printed 8).
+# K counts changed joint-action timesteps, not targeted agents or bursts.
+3m:
+  num_attack_train: 8
+  num_attack_test: 4
+  num_followup_agents: 1
+3s_vs_3z:
+  num_attack_train: 16
+  num_attack_test: 4
+  num_followup_agents: 1
+2s3z:
+  num_attack_train: 12
+  num_attack_test: 8
+  num_followup_agents: 2
+8m:
+  num_attack_train: 8
+  num_attack_test: 4
+  num_followup_agents: 3
+1c3s5z:
+  num_attack_train: 16
+  num_attack_test: 8
+  num_followup_agents: 4
+MMM:
+  num_attack_train: 16
+  num_attack_test: 8
+  num_followup_agents: 4

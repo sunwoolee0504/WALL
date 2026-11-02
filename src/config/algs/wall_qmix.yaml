@@ -25,8 +25,7 @@ hypernet_embed: 64
 name: "qmix"
 
 # --- Wolfpack attack ---
-pretrain: True
-followup_l2: False
+pretrain: True # WALL fine-tunes a pretrained defender; use False explicitly for scratch runs
 init_agent_random: True
 init_attack_step_method: "planner"
 
@@ -34,9 +33,9 @@ attack_duration: 3
 temperature: 0.5
 attack_period: 20
 
-num_attack_train: 12
-num_attack_test: 8
-num_followup_agents: 2
+num_attack_train: null # Resolve from corrected defaults in config/map_presets.yaml; explicit CLI overrides win
+num_attack_test: null # Resolve from corrected defaults in config/map_presets.yaml; explicit CLI overrides win
+num_followup_agents: null # Resolve from corrected defaults in config/map_presets.yaml; explicit CLI overrides win
 
 # --- Transformer ---
 num_trans_head: 1

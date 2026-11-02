@@ -5,97 +5,36 @@ from .epsilon_schedules import DecayThenFlatSchedule
 REGISTRY = {}
 
 
-class MultinomialActionSelector():
+def _legal(avail_actions):
+    legal = avail_actions.bool().clone()
+    legal[..., 0] |= ~legal.any(dim=-1)
+    return legal
 
+
+class EpsilonGreedyActionSelector:
     def __init__(self, args):
         self.args = args
-
-        self.schedule = DecayThenFlatSchedule(args.epsilon_start, args.epsilon_finish, args.epsilon_anneal_time,
-                                              decay="linear")
-        self.epsilon = self.schedule.eval(0)
-        self.test_greedy = getattr(args, "test_greedy", True)
-
-    def select_action(self, agent_inputs, avail_actions, t_env, test_mode=False):
-        masked_policies = agent_inputs.clone()
-        masked_policies[avail_actions == 0.0] = 0.0
-
-        self.epsilon = self.schedule.eval(t_env)
-
-        if test_mode and self.test_greedy:
-            picked_actions = masked_policies.max(dim=2)[1]
-        else:
-            picked_actions = Categorical(masked_policies).sample().long()
-
-        return picked_actions
-
-
-REGISTRY["multinomial"] = MultinomialActionSelector
-
-
-class EpsilonGreedyActionSelector():
-
-    def __init__(self, args):
-        self.args = args
-
-        self.schedule = DecayThenFlatSchedule(args.epsilon_start, args.epsilon_finish, args.epsilon_anneal_time,
-                                              decay="linear")
+        self.schedule = DecayThenFlatSchedule(args.epsilon_start, args.epsilon_finish,
+                                              args.epsilon_anneal_time, decay="linear")
         self.epsilon = self.schedule.eval(0)
 
     def select_action(self, agent_inputs, avail_actions, t_env, test_mode=False):
+        self.epsilon = 0.0 if test_mode else self.schedule.eval(t_env)
+        legal = _legal(avail_actions)
+        greedy = agent_inputs.masked_fill(~legal, -th.inf).argmax(dim=-1)
+        if self.epsilon == 0.0:
+            return greedy
+        random_actions = Categorical(probs=legal.float()).sample().long()
+        pick_random = th.rand_like(agent_inputs[..., 0]) < self.epsilon
+        return th.where(pick_random, random_actions, greedy)
 
-        # Assuming agent_inputs is a batch of Q-Values for each agent bav
-        self.epsilon = self.schedule.eval(t_env)
-
-        if test_mode:
-            # Greedy action selection only
-            self.epsilon = 0.0
-
-        # mask actions that are excluded from selection
-        masked_q_values = agent_inputs.clone()
-        masked_q_values[avail_actions == 0.0] = -float("inf")  # should never be selected!
-
-        random_numbers = th.rand_like(agent_inputs[:, :, 0])
-        pick_random = (random_numbers < self.epsilon).long()
-        random_actions = Categorical(avail_actions.float()).sample().long()
-
-        picked_actions = pick_random * random_actions + (1 - pick_random) * masked_q_values.max(dim=2)[1]
-        return picked_actions
-    
     def select_action_wolfpack(self, agent_inputs, avail_actions, t_env, test_mode=False):
-        #agent_inputs (bs, n_agents, ac_dim)
-        #avail_actions (bs, n_agents, ac_dim)
-        #attacker_action (bs, )
-
-        self.epsilon = self.schedule.eval(t_env)
-
-        if test_mode:
-            # Greedy action selection only
-            self.epsilon = 0.0
-
-        self.epsilon = 0.0
-        masked_q_values = agent_inputs.clone()
-        masked_q_values[avail_actions == 0.0] = -float("inf")  # should never be selected
-
-        random_numbers = th.rand_like(agent_inputs[:, :, 0])
-        pick_random = (random_numbers < self.epsilon).long()
-        random_actions = Categorical(avail_actions.float()).sample().long()
-
-        ori_actions = pick_random * random_actions + (1 - pick_random) * masked_q_values.max(dim=2)[1]
-        self.epsilon = 0.1
-        pick_random = (random_numbers < self.epsilon).long()
-        random_actions = Categorical(avail_actions.float()).sample().long()
-        picked_actions = pick_random * random_actions + (1 - pick_random) * masked_q_values.max(dim=2)[1]
-
-        random_actions = Categorical(avail_actions.float()).sample().long()
-
-        masked_q_values[avail_actions == 0.0] = -float("inf")
-
-        masked_q_values = agent_inputs.clone()
-        masked_q_values[avail_actions == 0.0] = float("inf")  # should never be selected
-
-        attacker_actions = masked_q_values.min(dim=2)[1]
-        
-        return ori_actions, picked_actions, random_actions, attacker_actions
+        """Compatibility tuple; the runner uses full joint-Q attack helpers."""
+        actions = self.select_action(agent_inputs, avail_actions, t_env, test_mode)
+        legal = _legal(avail_actions)
+        random_actions = Categorical(probs=legal.float()).sample().long()
+        worst = agent_inputs.masked_fill(~legal, th.inf).argmin(dim=-1)
+        return actions, actions.clone(), random_actions, worst
 
 
 REGISTRY["epsilon_greedy"] = EpsilonGreedyActionSelector

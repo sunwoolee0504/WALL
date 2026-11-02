@@ -75,14 +75,26 @@ class EpisodeBatch:
                 self.data.transition_data[field_key] = th.zeros((batch_size, max_seq_length, *shape), dtype=dtype, device=self.device)
 
     def extend(self, scheme, groups=None):
-        self._setup_data(scheme, self.groups if groups is None else groups, self.batch_size, self.max_seq_length)
+        self._setup_data(scheme, self.groups if groups is None else groups, self.batch_size, self.max_seq_length, {})
 
-    def to(self, device):
+    def to(self, device, non_blocking=False):
         for k, v in self.data.transition_data.items():
-            self.data.transition_data[k] = v.to(device)
+            self.data.transition_data[k] = v.to(device, non_blocking=non_blocking)
         for k, v in self.data.episode_data.items():
-            self.data.episode_data[k] = v.to(device)
-        self.device = device
+            self.data.episode_data[k] = v.to(device, non_blocking=non_blocking)
+        self.device = str(device)
+        return self
+
+    def pin_memory(self):
+        """Pin only a sampled CPU batch, never the entire replay allocation."""
+        if str(self.device) != "cpu":
+            raise ValueError("Only CPU batches can be pinned")
+        if not th.cuda.is_available():
+            return self
+        for table in (self.data.transition_data, self.data.episode_data):
+            for key, value in table.items():
+                table[key] = value.pin_memory()
+        return self
 
     def update(self, data, bs=slice(None), ts=slice(None), mark_filled=True):
         slices = self._parse_slices((bs, ts))
@@ -99,12 +111,25 @@ class EpisodeBatch:
             else:
                 raise KeyError("{} not found in transition or episode data".format(k))
 
-            dtype = self.scheme[k].get("dtype", th.float32)
-            v = th.tensor(v, dtype=dtype, device=self.device)
-            self._check_safe_view(v, target[k][_slices])
-            target[k][_slices] = v.view_as(target[k][_slices])
+            # copy_ handles device/dtype conversion directly into the destination.
+            # A tensor input is detached, avoiding a temporary copy and autograd graph.
+            if isinstance(v, th.Tensor):
+                v = v.detach()
+            else:
+                if isinstance(v, (list, tuple)) and v and isinstance(v[0], np.ndarray):
+                    v = np.asarray(v)
+                v = th.as_tensor(v)
+            destination = target[k][_slices]
+            self._check_safe_view(v, destination)
+            if any(isinstance(index, (list, tuple, np.ndarray, th.Tensor)) for index in slices):
+                # Advanced indexing creates a copy, so copy_ on that selection
+                # would silently discard updates. Indexed assignment writes back.
+                target[k][_slices] = v.reshape_as(destination).to(device=destination.device, dtype=destination.dtype)
+            else:
+                destination.copy_(v.reshape_as(destination))
 
-            if k in self.preprocess:
+            if k in self.preprocess and self.preprocess[k][0] not in data:
+                # Replay batches already contain derived one-hot fields.
                 new_k = self.preprocess[k][0]
                 v = target[k][_slices]
                 for transform in self.preprocess[k][1]:
@@ -112,13 +137,10 @@ class EpisodeBatch:
                 target[new_k][_slices] = v.view_as(target[new_k][_slices])
 
     def _check_safe_view(self, v, dest):
-        idx = len(v.shape) - 1
-        for s in dest.shape[::-1]:
-            if v.shape[idx] != s:
-                if s != 1:
-                    raise ValueError("Unsafe reshape of {} to {}".format(v.shape, dest.shape))
-            else:
-                idx -= 1
+        source_shape = tuple(size for size in v.shape if size != 1)
+        target_shape = tuple(size for size in dest.shape if size != 1)
+        if source_shape != target_shape:
+            raise ValueError("Unsafe reshape of {} to {}".format(v.shape, dest.shape))
 
     def __getitem__(self, item):
         if isinstance(item, str):
@@ -159,7 +181,7 @@ class EpisodeBatch:
             return ret
 
     def _get_num_items(self, indexing_item, max_size):
-        if isinstance(indexing_item, list) or isinstance(indexing_item, np.ndarray):
+        if isinstance(indexing_item, (list, np.ndarray, th.Tensor)):
             return len(indexing_item)
         elif isinstance(indexing_item, slice):
             _range = indexing_item.indices(max_size)
@@ -176,7 +198,7 @@ class EpisodeBatch:
         # Only batch slice given, add full time slice
         if (isinstance(items, slice)  # slice a:b
             or isinstance(items, int)  # int i
-            or (isinstance(items, (list, np.ndarray, th.LongTensor, th.cuda.LongTensor)))  # [a,b,c]
+            or (isinstance(items, (list, np.ndarray, th.Tensor)))  # [a,b,c]
             ):
             items = (items, slice(None))
 
@@ -195,7 +217,7 @@ class EpisodeBatch:
         return parsed
 
     def max_t_filled(self):
-        return th.sum(self.data.transition_data["filled"], 1).max(0)[0]
+        return int(self.data.transition_data["filled"].sum(dim=1).max().item())
 
     def __repr__(self):
         return "EpisodeBatch. Batch Size:{} Max_seq_len:{} Keys:{} Groups:{}".format(self.batch_size,
@@ -213,6 +235,11 @@ class ReplayBuffer(EpisodeBatch):
 
     def insert_episode_batch(self, ep_batch):
         if self.buffer_index + ep_batch.batch_size <= self.buffer_size:
+            if ep_batch.max_seq_length > self.max_seq_length:
+                raise ValueError("Episode is longer than replay capacity")
+            if ep_batch.max_seq_length < self.max_seq_length:
+                for value in self.data.transition_data.values():
+                    value[self.buffer_index:self.buffer_index + ep_batch.batch_size, ep_batch.max_seq_length:].zero_()
             self.update(ep_batch.data.transition_data,
                         slice(self.buffer_index, self.buffer_index + ep_batch.batch_size),
                         slice(0, ep_batch.max_seq_length),

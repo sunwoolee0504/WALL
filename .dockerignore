@@ -1,0 +1,11 @@
+# Build only the isolated runtime; source is mounted when starting a container.
+**
+!docker/
+!docker/Dockerfile
+!requirements-optimized.txt
+!scripts/
+!scripts/install_optimized_env.sh
+!scripts/check_environment.py
+!src/
+!src/envs/
+!src/envs/__init__.py

@@ -8,7 +8,7 @@ env_args: {} # Arguments for the environment
 batch_size_run: 1 # Number of environments to run in parallel
 test_nepisode: 20 # Number of episodes to test for
 test_interval: 2000 # Test after {} timesteps have passed
-test_greedy: True # Use greedy evaluation (if False, will set epsilon floor to 0
+test_greedy: True # Greedy evaluation; the WALL runner always uses greedy evaluation actions
 log_interval: 2000 # Log summary of stats after every {} timesteps
 runner_log_interval: 2000 # Log runner stats (not test stats) every {} timesteps
 learner_log_interval: 2000 # Log training stats every {} timesteps
@@ -18,7 +18,7 @@ buffer_cpu_only: True # If true we won't keep all of the replay buffer in vram
 
 # --- Logging options ---
 use_tensorboard: False # Log results to tensorboard
-use_wandb: False # Log results to tensorboard
+use_wandb: False # Explicit opt-in; no credentials are stored in source
 save_model: True # Save the models to disk
 save_model_interval: 100000 # Save models after this many timesteps
 checkpoint_path: "" # Load a checkpoint from this path
@@ -31,7 +31,9 @@ local_results_path: "results" # Path for local results
 gamma: 0.99
 batch_size: 32 # Number of episodes to train on
 buffer_size: 32 # Size of the replay buffer
-lr: 0.0005 # Learning rate for agents
+lr: 0.0005 # Defender learning rate; honored when warm-starting pretrained RMSProp
+planner_lr: null # null inherits lr; set explicitly to tune the defender independently
+qdiff_lr: null # null inherits lr; full resume restores all checkpoint optimizer settings
 critic_lr: 0.0005 # Learning rate for critics
 optim_alpha: 0.99 # RMSProp alpha
 optim_eps: 0.00001 # RMSProp epsilon
@@ -47,13 +49,46 @@ obs_last_action: True # Include the agent's last action (one_hot) in the observa
 repeat_id: 1
 label: "default_label"
 
+# --- Optimized runtime (conservative defaults; faster precision/compile are opt-in) ---
+seed: 1
+cpu_threads: 4
+deterministic: False
+replay_pin_memory: True # Pin sampled CPU staging batches only when copying to CUDA
+use_amp: False
+amp_dtype: bfloat16
+compile_models: False
+attention_backend: sdpa
+separate_eval_env: True # Preserve the training simulator's RNG stream
+eval_seed_offset: 10000
+resume_checkpoint: True # checkpoint_path restores versioned learner state
+checkpoint_save_replay: False # Large optional replay snapshot; simulator state is not saved
+load_pretrain_optimizer: True # Retain defender RMSProp state when available
+pretrain_dir: "" # Relative to this project; empty uses pretrain_model/<algorithm>/<map>
+wandb_project: WALL
+wandb_entity: null
+wandb_mode: online
 
+# --- WALL causal predictors / attack configuration ---
+random_attack_probability: 0.1 # Used only by init_attack_step_method=random
+followup_selection: q_gradient
+followup_q_lr: 0.0005 # One Q-output gradient step used by Eq. (2)
+scheduler_mask_episode_end: False
+trans_ff_multiplier: 4
+trans_dropout: 0.1
+planner_batch_size: 32
+planner_origins_per_episode: 1 # Sampled spans per episode; each provides planner_train_span candidate times
+planner_train_span: null # Default: max(trans_input_len, attack_period)
+planner_warmup_updates: 32
+world_model_aux_weight: 0.1
+predict_availability: True
+predict_termination: True
+planner_state_loss_weight: 1.0
+planner_obs_loss_weight: 1.0
+planner_loss_weight: 1.0
+qdifference_loss_weight: 1.0
+target_update_mode: hard # Original schedule; use ema for a Polyak ablation
+target_update_tau: 0.005
 
-
-
-
-
-
-
-
-
+# Preserve WALL defaults; disable only for the natural QMIX control.
+train_attack_predictors: True
+evaluate_wolfpack: True

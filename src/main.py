@@ -1,17 +1,15 @@
-import numpy as np
 import os
-import collections
+from collections.abc import Mapping
 from os.path import dirname, abspath
 from copy import deepcopy
 from sacred import Experiment, SETTINGS
 from sacred.observers import FileStorageObserver
 from sacred.utils import apply_backspaces_and_linefeeds
 import sys
-import torch as th
 from utils.logging import get_logger
 import yaml
 
-from run import run
+from run import run, seed_everything
 
 SETTINGS['CAPTURE_MODE'] = "fd" # set to "no" if you want to see stdout/stderr in console
 logger = get_logger()
@@ -27,8 +25,7 @@ results_path = os.path.join(dirname(dirname(abspath(__file__))), "results")
 def my_main(_run, _config, _log):
     # Setting the random seed throughout the modules
     config = config_copy(_config)
-    np.random.seed(config["seed"])
-    th.manual_seed(config["seed"])
+    seed_everything(config["seed"], deterministic=config.get("deterministic", False))
     config['env_args']['seed'] = config["seed"]
 
     # run the framework
@@ -39,22 +36,26 @@ def _get_config(params, arg_name, subfolder):
     config_name = None
     for _i, _v in enumerate(params):
         if _v.split("=")[0] == arg_name:
-            config_name = _v.split("=")[1]
+            config_name = _v.split("=", 1)[1]
             del params[_i]
             break
 
+    supported = {"algs": ("wall_qmix", "wall_vdn", "wall_qplex", "natural_qmix"), "envs": ("sc2",)}
+    if subfolder in supported and config_name not in supported[subfolder]:
+        raise ValueError("{} must be one of: {} (received {!r})".format(
+            arg_name, ", ".join(supported[subfolder]), config_name))
     if config_name is not None:
         with open(os.path.join(os.path.dirname(__file__), "config", subfolder, "{}.yaml".format(config_name)), "r") as f:
             try:
-                config_dict = yaml.load(f)
+                config_dict = yaml.safe_load(f)
             except yaml.YAMLError as exc:
                 assert False, "{}.yaml error: {}".format(config_name, exc)
         return config_dict
 
 
 def recursive_dict_update(d, u):
-    for k, v in u.items():
-        if isinstance(v, collections.Mapping):
+    for k, v in (u or {}).items():
+        if isinstance(v, Mapping):
             d[k] = recursive_dict_update(d.get(k, {}), v)
         else:
             d[k] = v
@@ -76,7 +77,7 @@ if __name__ == '__main__':
     # Get the defaults from default.yaml
     with open(os.path.join(os.path.dirname(__file__), "config", "default.yaml"), "r") as f:
         try:
-            config_dict = yaml.load(f)
+            config_dict = yaml.safe_load(f)
         except yaml.YAMLError as exc:
             assert False, "default.yaml error: {}".format(exc)
 

@@ -33,13 +33,15 @@ class DMAQer(nn.Module):
         v_tot = th.sum(agent_qs, dim=-1)
         return v_tot
 
-    def calc_adv(self, agent_qs, states, actions, max_q_i):
+    def calc_adv(self, agent_qs, states, actions, max_q_i, detach_advantage=True):
         states = states.reshape(-1, self.state_dim)
         actions = actions.reshape(-1, self.action_dim)
         agent_qs = agent_qs.view(-1, self.n_agents)
         max_q_i = max_q_i.view(-1, self.n_agents)
 
-        adv_q = (agent_qs - max_q_i).view(-1, self.n_agents).detach()
+        adv_q = (agent_qs - max_q_i).view(-1, self.n_agents)
+        if detach_advantage:
+            adv_q = adv_q.detach()
 
         adv_w_final = self.si_weight(states, actions)
         adv_w_final = adv_w_final.view(-1, self.n_agents)
@@ -50,15 +52,15 @@ class DMAQer(nn.Module):
             adv_tot = th.sum(adv_q * adv_w_final, dim=1)
         return adv_tot
 
-    def calc(self, agent_qs, states, actions=None, max_q_i=None, is_v=False):
+    def calc(self, agent_qs, states, actions=None, max_q_i=None, is_v=False, detach_advantage=True):
         if is_v:
             v_tot = self.calc_v(agent_qs)
             return v_tot
         else:
-            adv_tot = self.calc_adv(agent_qs, states, actions, max_q_i)
+            adv_tot = self.calc_adv(agent_qs, states, actions, max_q_i, detach_advantage)
             return adv_tot
 
-    def forward(self, agent_qs, states, actions=None, max_q_i=None, is_v=False):
+    def forward(self, agent_qs, states, actions=None, max_q_i=None, is_v=False, detach_advantage=True):
         bs = agent_qs.size(0)
         states = states.reshape(-1, self.state_dim)
         agent_qs = agent_qs.view(-1, self.n_agents)
@@ -76,7 +78,7 @@ class DMAQer(nn.Module):
             if self.args.weighted_head:
                 max_q_i = w_final * max_q_i + v
 
-        y = self.calc(agent_qs, states, actions=actions, max_q_i=max_q_i, is_v=is_v)
+        y = self.calc(agent_qs, states, actions=actions, max_q_i=max_q_i, is_v=is_v, detach_advantage=detach_advantage)
         v_tot = y.view(bs, -1, 1)
 
         return v_tot
